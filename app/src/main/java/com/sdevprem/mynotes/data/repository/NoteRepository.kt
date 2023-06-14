@@ -3,8 +3,11 @@ package com.sdevprem.mynotes.data.repository
 import com.sdevprem.mynotes.data.api.NotesAPI
 import com.sdevprem.mynotes.data.model.notes.Note
 import com.sdevprem.mynotes.utils.NetworkResult
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onStart
 import retrofit2.Response
 import javax.inject.Inject
 
@@ -30,7 +33,8 @@ class NoteRepository @Inject constructor(
         } catch (e: Exception) {
             emit(NetworkResult.Error(e.message ?: ERROR_MESSAGE))
         }
-    }
+    }.flowOn(Dispatchers.IO)
+        .onStart { emit(NetworkResult.Loading) }
 
     private suspend fun <T> FlowCollector<NetworkResult<T>>.handleResponse(response: Response<T>) {
         if (response.isSuccessful) {
