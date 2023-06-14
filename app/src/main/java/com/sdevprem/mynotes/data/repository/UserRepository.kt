@@ -3,6 +3,7 @@ package com.sdevprem.mynotes.data.repository
 import com.sdevprem.mynotes.data.api.UserAPI
 import com.sdevprem.mynotes.data.model.user.User
 import com.sdevprem.mynotes.data.model.user.UserResponse
+import com.sdevprem.mynotes.data.utils.TokenManager
 import com.sdevprem.mynotes.utils.NetworkResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
@@ -14,8 +15,11 @@ import javax.inject.Inject
 private const val errorMsg = "Something went wrong"
 
 class UserRepository @Inject constructor(
-    private val userAPI: UserAPI
+    private val userAPI: UserAPI,
+    private val tokenManager: TokenManager
 ) {
+
+    val authToken = tokenManager.authToken
 
     fun registerUser(user: User) = doAuth { userAPI.signup(user) }
 
@@ -26,9 +30,11 @@ class UserRepository @Inject constructor(
     ) = flow<NetworkResult<UserResponse>> {
         try {
             val response = authenticate()
-            if (response.isSuccessful && response.body() != null)
+            if (response.isSuccessful && response.body() != null) {
+                val userResponse = response.body()!!
+                tokenManager.updateAuthToken(userResponse.token)
                 emit(NetworkResult.Success(response.body()!!))
-            else if (response.errorBody() != null) {
+            } else if (response.errorBody() != null) {
                 emit(NetworkResult.Error(response.errorBody()!!.charStream().readText()))
             } else {
                 emit(NetworkResult.Error(errorMsg))
@@ -38,5 +44,4 @@ class UserRepository @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
         .onStart { emit(NetworkResult.Loading) }
-
 }

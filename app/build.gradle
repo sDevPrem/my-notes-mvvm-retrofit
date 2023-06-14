@@ -70,6 +70,8 @@ dependencies {
 
     implementation 'com.github.ybq:Android-SpinKit:1.4.0'
 
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
+
 
 }
 
