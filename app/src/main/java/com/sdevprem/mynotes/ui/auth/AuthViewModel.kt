@@ -22,6 +22,9 @@ class AuthViewModel @Inject constructor(
     private val _userResponse = MutableStateFlow<NetworkResult<UserResponse>>(NetworkResult.Idle)
     val userResponse = _userResponse.toReadOnly()
 
+    val authToken = userRepository
+        .authToken
+
     fun registerUser(user: User) {
         userRepository.registerUser(user)
             .onEach { _userResponse.value = it }

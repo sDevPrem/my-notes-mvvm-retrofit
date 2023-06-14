@@ -15,6 +15,7 @@ import com.sdevprem.mynotes.utils.NetworkResult
 import com.sdevprem.mynotes.utils.launchInLifeCycle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 
 @AndroidEntryPoint
 class RegisterFragment : Fragment(R.layout.fragment_register){
@@ -36,6 +37,14 @@ class RegisterFragment : Fragment(R.layout.fragment_register){
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
+
+        launchInLifeCycle {
+            if (viewModel.authToken.first() != null)
+                findNavController().navigate(
+                    RegisterFragmentDirections
+                        .actionRegisterFragmentToNotesFragment()
+                )
+        }
 
         launchInLifeCycle {
             viewModel.userResponse.collectLatest {
