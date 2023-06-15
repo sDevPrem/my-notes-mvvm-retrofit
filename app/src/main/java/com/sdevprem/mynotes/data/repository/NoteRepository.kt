@@ -1,7 +1,9 @@
 package com.sdevprem.mynotes.data.repository
 
+import android.util.Log
 import com.sdevprem.mynotes.data.api.NotesAPI
 import com.sdevprem.mynotes.data.model.notes.Note
+import com.sdevprem.mynotes.utils.Constants.TAG
 import com.sdevprem.mynotes.utils.NetworkResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.FlowCollector
@@ -31,7 +33,9 @@ class NoteRepository @Inject constructor(
         try {
             handleResponse(request())
         } catch (e: Exception) {
-            emit(NetworkResult.Error(e.message ?: ERROR_MESSAGE))
+            val errorMsg = e.message ?: ERROR_MESSAGE
+            Log.e(TAG, errorMsg)
+            emit(NetworkResult.Error(errorMsg))
         }
     }.flowOn(Dispatchers.IO)
         .onStart { emit(NetworkResult.Loading) }
@@ -40,7 +44,9 @@ class NoteRepository @Inject constructor(
         if (response.isSuccessful) {
             emit(NetworkResult.Success(response.body()!!))
         } else if (response.errorBody() != null) {
-            emit(NetworkResult.Error(response.errorBody()!!.charStream().readText()))
+            val errorMsg = response.errorBody()!!.charStream().readText()
+            Log.e(TAG, errorMsg)
+            emit(NetworkResult.Error(errorMsg))
         } else emit(NetworkResult.Error(ERROR_MESSAGE))
     }
 }

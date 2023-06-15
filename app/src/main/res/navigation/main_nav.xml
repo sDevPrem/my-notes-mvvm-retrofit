@@ -34,9 +34,19 @@
         android:id="@+id/notesFragment"
         android:name="com.sdevprem.mynotes.ui.notes.NotesFragment"
         android:label="fragment_notes"
-        tools:layout="@layout/fragment_notes" >
+        tools:layout="@layout/fragment_notes">
         <action
-            android:id="@+id/action_notesFragment_self"
-            app:destination="@id/notesFragment" />
+            android:id="@+id/action_notesFragment_to_noteEditorFragment"
+            app:destination="@id/noteEditorFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/noteEditorFragment"
+        android:name="com.sdevprem.mynotes.ui.notes.editor.NoteEditorFragment"
+        android:label="fragment_note_editor"
+        tools:layout="@layout/fragment_note_editor">
+        <argument
+            android:name="note"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
 </navigation>

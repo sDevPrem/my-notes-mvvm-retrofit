@@ -8,7 +8,9 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.google.gson.Gson
 import com.sdevprem.mynotes.R
 import com.sdevprem.mynotes.databinding.FragmentNotesBinding
 import com.sdevprem.mynotes.utils.NetworkResult
@@ -22,7 +24,11 @@ class NotesFragment : Fragment(R.layout.fragment_notes) {
     private lateinit var binding: FragmentNotesBinding
     private val viewModel by viewModels<NotesViewModel>()
     private val adapter: NoteAdapter = NoteAdapter {
-
+        val noteJson = Gson().toJson(it)
+        findNavController().navigate(
+            NotesFragmentDirections
+                .actionNotesFragmentToNoteEditorFragment(noteJson)
+        )
     }
 
     override fun onCreateView(
@@ -43,6 +49,12 @@ class NotesFragment : Fragment(R.layout.fragment_notes) {
         super.onViewCreated(view, savedInstanceState)
         noteList.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         noteList.adapter = adapter
+        addNote.setOnClickListener {
+            findNavController().navigate(
+                NotesFragmentDirections
+                    .actionNotesFragmentToNoteEditorFragment(null)
+            )
+        }
 
         launchInLifeCycle {
             viewModel.notes.collectLatest {
