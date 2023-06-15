@@ -13,6 +13,7 @@ import androidx.navigation.fragment.navArgs
 import com.google.gson.Gson
 import com.sdevprem.mynotes.data.model.notes.Note
 import com.sdevprem.mynotes.databinding.FragmentNoteEditorBinding
+import com.sdevprem.mynotes.ui.notes.NotesFragment
 import com.sdevprem.mynotes.utils.NetworkResult
 import com.sdevprem.mynotes.utils.launchInLifeCycle
 import dagger.hilt.android.AndroidEntryPoint
@@ -64,6 +65,10 @@ class NoteEditorFragment : Fragment() {
                     }
 
                     is NetworkResult.Success -> {
+                        findNavController().previousBackStackEntry?.savedStateHandle?.set(
+                            NotesFragment.SHOULD_RELOAD_NOTE_LIST,
+                            true
+                        )
                         findNavController().popBackStack()
                     }
                 }

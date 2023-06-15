@@ -21,6 +21,10 @@ import kotlinx.coroutines.flow.collectLatest
 @AndroidEntryPoint
 class NotesFragment : Fragment(R.layout.fragment_notes) {
 
+    companion object {
+        const val SHOULD_RELOAD_NOTE_LIST = "should_reload_note_list"
+    }
+
     private lateinit var binding: FragmentNotesBinding
     private val viewModel by viewModels<NotesViewModel>()
     private val adapter: NoteAdapter = NoteAdapter {
@@ -57,6 +61,23 @@ class NotesFragment : Fragment(R.layout.fragment_notes) {
         }
 
         launchInLifeCycle {
+            findNavController().currentBackStackEntry?.savedStateHandle?.getStateFlow(
+                SHOULD_RELOAD_NOTE_LIST,
+                false
+            )?.collectLatest {
+                if (it) {
+                    viewModel.fetchNotes(true)
+                    findNavController().currentBackStackEntry?.savedStateHandle?.set(
+                        SHOULD_RELOAD_NOTE_LIST,
+                        false //to not reload force fully on every lifecycle state
+                    )
+                }
+            }
+        }
+
+        viewModel.fetchNotes()
+
+        launchInLifeCycle {
             viewModel.notes.collectLatest {
                 when (it) {
                     is NetworkResult.Error -> {
@@ -66,11 +87,13 @@ class NotesFragment : Fragment(R.layout.fragment_notes) {
 
                     NetworkResult.Idle -> {}
                     NetworkResult.Loading -> {
+                        noteList.isVisible = false
                         progressBar.isVisible = true
                     }
 
                     is NetworkResult.Success -> {
                         progressBar.isVisible = false
+                        noteList.isVisible = true
                         adapter.submitList(it.data)
                     }
                 }
