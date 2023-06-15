@@ -1,6 +1,7 @@
 package com.sdevprem.mynotes.ui.notes.editor
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import com.google.gson.Gson
 import com.sdevprem.mynotes.data.model.notes.Note
 import com.sdevprem.mynotes.databinding.FragmentNoteEditorBinding
 import com.sdevprem.mynotes.ui.notes.NotesFragment
+import com.sdevprem.mynotes.utils.Constants.TAG
 import com.sdevprem.mynotes.utils.NetworkResult
 import com.sdevprem.mynotes.utils.launchInLifeCycle
 import dagger.hilt.android.AndroidEntryPoint
@@ -54,6 +56,7 @@ class NoteEditorFragment : Fragment() {
                             it.msg,
                             Toast.LENGTH_SHORT
                         ).show()
+                        viewModel.resetNetworkResult()
                     }
 
                     NetworkResult.Idle -> {
@@ -65,6 +68,7 @@ class NoteEditorFragment : Fragment() {
                     }
 
                     is NetworkResult.Success -> {
+                        Log.d(TAG, it.data.toString())
                         findNavController().previousBackStackEntry?.savedStateHandle?.set(
                             NotesFragment.SHOULD_RELOAD_NOTE_LIST,
                             true
@@ -73,7 +77,6 @@ class NoteEditorFragment : Fragment() {
                     }
                 }
             }
-            viewModel.resetNetworkResult()
         }
 
         return@with
