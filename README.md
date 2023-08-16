@@ -13,9 +13,9 @@ is used.
 
 ## Screenshots
 
-|                                             |                                               |                                                  |
-|---------------------------------------------|-----------------------------------------------|--------------------------------------------------|
-| ![Login screen](image/screenshot_login.png) | ![Note List](image/screesnshot_note_list.png) | ![Note Editor](image/screenshot_note_editor.png) |
+|                                                                                                                       |                                                                                                                            |                                                                                                                             |
+|-----------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|
+| ![screenshot_login](https://github.com/sDevPrem/ktor-notes-api/assets/130966261/01538fc1-5fef-49c9-9ae4-77e733519fae) | ![screesnshot_note_list](https://github.com/sDevPrem/ktor-notes-api/assets/130966261/f7bdb6d8-7d02-4176-bc88-54adc8bf7db7) | ![screenshot_note_editor](https://github.com/sDevPrem/ktor-notes-api/assets/130966261/f26b18a8-c2a4-4b4e-b0b3-8e842274ce4d) |
 
 ## Build with
 
